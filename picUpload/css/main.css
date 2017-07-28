@@ -1,0 +1,134 @@
+.sign_bg {
+  background: #E8432E;
+}
+#block {
+  display: block;
+}
+#inline_b {
+  display: inline-block;
+}
+#hide {
+  display: none;
+}
+.s_info {
+  position: relative;
+  width: 90vw;
+  box-sizing: border-box;
+  margin-left: 5vw;
+  margin-top: 10vh;
+  padding: 8vw 5vw 3vw;
+  border-radius: 5px;
+  background: #FFF;
+}
+.s_info .s_hd {
+  display: inline-block;
+  position: absolute;
+  width: 50vw;
+  top: 0;
+  left: 20vw;
+  padding: 3px 0;
+  font-size: 4.2vw;
+  margin: 0 auto;
+  color: #FFF;
+  background: #ff6d00;
+  text-align: center;
+  border-radius: 0 0 5px 5px;
+}
+.s_info .s_tips {
+  display: block;
+  padding-bottom: 7vw;
+  text-align: center;
+  color: #0060BC;
+  font-size: 4vw;
+  line-height: 8vw;
+  font-weight: bold;
+}
+.s_info .sub_btn {
+  display: block;
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 5vw;
+  color: #FFF;
+  background: #0060BC;
+  font-size: 3.5vw;
+}
+.s_info .ipt_box {
+  display: block;
+  padding-bottom: 3vw;
+}
+.s_info .ipt_box.hide {
+  display: none;
+}
+.s_info .ipt_box .s_lb {
+  width: 17vw;
+  float: left;
+  line-height: 10vw;
+  font-size: 3.5vw;
+}
+.s_info .ipt_box .s_lb .required {
+  color: red;
+  font-size: 4vw;
+}
+.s_info .ipt_box .s_ipt {
+  width: 62vw;
+  height: 10vw;
+  box-sizing: border-box;
+  padding: 2vw 1vw;
+  font-size: 3.5vw;
+  border-radius: 5px;
+  border: 1px solid #333;
+}
+.s_info .ipt_box .s_text {
+  margin-top: 1vw;
+  width: 62vw;
+  height: 17vw;
+  box-sizing: border-box;
+  padding: 2vw;
+  font-size: 3.5vw;
+  border-radius: 5px;
+  border: 1px solid #333;
+}
+.s_info #info2 {
+  display: none;
+}
+.s_info #info2 .imgUpload {
+  display: block;
+  padding: 2vw 0 4vw;
+}
+.s_info #info2 .imgUpload #imgFile {
+  display: none;
+}
+.s_info #info2 .imgUpload .imgBox {
+  float: left;
+  position: relative;
+  width: 24vw;
+  height: 24vw;
+  margin-right: 3vw;
+}
+.s_info #info2 .imgUpload .imgBox img {
+  width: 100%;
+  height: 100%;
+}
+.s_info #info2 .imgUpload .imgBox:nth-child(3) {
+  margin: 0;
+}
+.s_info #info2 .imgUpload .imgBox .cancel_btn {
+  position: absolute;
+  width: 6vw;
+  height: 6vw;
+  top: -2vw;
+  right: -2vw;
+  background: url('../images/close.png') no-repeat center;
+  background-size: cover;
+}
+.s_info #info2 .imgUpload .addImg {
+  display: block;
+  float: left;
+  width: 24vw;
+  height: 24vw;
+  border: 1px dotted #959595;
+  background: url('../images/add.png') no-repeat center;
+  background-size: 12vw 12vw;
+}

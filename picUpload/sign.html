@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>摄影大赛投票</title>
+    <link rel="stylesheet" type="text/css" href="./css/reset.css">
+    <link rel="stylesheet/less" type="text/css" href="./css/main.less">
+    <script src="./js/less.min.js"></script>
+    <script src="./js/jquery.js"></script>
+    <script src="./js/exif.js"></script>
+    <script src="./js/common.js"></script>
+</head>
+<body class="sign_bg">
+    <div class="s_info">
+        <div id="info1">
+            <h2 class="s_hd">基本信息</h2>
+            <div class="s_tips">信息请真实填写</div>
+            <div class="ipt_box">
+                <label class="s_lb"><i class="required">*</i>姓名:</label>
+                <input class="s_ipt" type="text" placeholder="请填写您的姓名">
+            </div>
+            <div class="ipt_box">
+                <label class="s_lb"><i class="required">*</i>电话:</label>
+                <input class="s_ipt" type="tel" placeholder="请填写联系电话">
+            </div>
+            <div class="ipt_box">
+                <label class="s_lb"><i class="required">*</i>小区:</label>
+                <input class="s_ipt" type="text" placeholder="请填写小区名称">
+            </div>
+            <div class="ipt_box">
+                <a href="javascript:;" id="base_sub" class="sub_btn">保存基本信息</a>
+            </div>
+        </div>
+        <div id="info2">
+            <form id="imgUpForm">
+            <h2 class="s_hd">上传图片</h2>
+            <div class="s_tips">上传图片后请务必填写描述</div>
+
+            <div class="imgUpload clearfix">
+                <a id="addImg" class="addImg" href="javascript:;"></a>
+                <input type="file" id="imgFile" onchange="imgReady(this)">
+            </div>
+            <div class="ipt_box s_desc hide">
+                <label class="s_lb"><i class="required">*</i>图1描述:</label>
+                <textarea class="s_text" name="description1" placeholder="请输入描述信息"></textarea>
+            </div>
+            <div class="ipt_box s_desc hide">
+                <label class="s_lb"><i class="required">*</i>图2描述:</label>
+                <textarea class="s_text" name="description2" placeholder="请输入描述信息"></textarea>
+            </div>
+            <div class="ipt_box s_desc hide">
+                <label class="s_lb"><i class="required">*</i>图3描述:</label>
+                <textarea class="s_text" name="description3" placeholder="请输入描述信息"></textarea>
+            </div>
+            <div id="imgsub_box" class="ipt_box">
+                <a href="javascript:;" id="all_sub" class="sub_btn">提交信息</a>
+            </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        $("#base_sub").click(function(){
+            $("#info1").hide();
+            $("#info2").show();
+        });
+        $("#addImg").click(function(){
+            $("#imgFile").click();
+        });
+        var maxsize = 200 * 1024;
+        function imgReady(obj){
+            var picFile = obj.files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(picFile);
+            reader.onload = function(f){
+                var res = this.result;
+                var img = new Image();
+                if(res.length <= maxsize){
+                    toPreviewer(res);
+                    return;
+                }
+                img.onload = function(){
+                    var compressedDataUrl = compress(img, picFile.type);
+                    img = null;
+                };
+                img.src = res;
+            }
+        }
+        function imgCancel(obj){
+            $(obj).parent().remove();
+            var imglen = $(".imgBox").length;
+            $(".s_desc").eq(imglen).hide();
+            $("#addImg").show();
+        }
+        function rotateImg(img, direction,canvas,fileType) {
+            var min_step = 0;
+            var max_step = 3;
+            //var img = document.getElementById(pid);
+
+            if (img == null)return;
+            //img的高度和宽度不能在img元素隐藏后获取，否则会出错
+            var height = img.height;
+            var width = img.width;
+            //var step = img.getAttribute('step');
+            var step = 2;
+            if (step == null) {
+                step = min_step;
+            }
+            if (direction == 'right') {
+                step++;
+                //旋转到原位置，即超过最大值
+                step > max_step && (step = min_step);
+            } else {
+                step--;
+                step < min_step && (step = max_step);
+            }
+            var degree = step * 90 * Math.PI / 180;
+            var ctx = canvas.getContext('2d');
+            switch (step) {
+                case 0:
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0);
+                    break;
+                case 1:
+                    canvas.width = height;
+                    canvas.height = width;
+                    ctx.rotate(degree);
+                    ctx.drawImage(img, 0, -height);
+                    break;
+                case 2:
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.rotate(degree);
+                    ctx.drawImage(img, -width, -height);
+                    break;
+                case 3:
+                    canvas.width = height;
+                    canvas.height = width;
+                    ctx.rotate(degree);
+                    ctx.drawImage(img, -width, 0);
+                    break;
+            }
+            return canvas.toDataURL(fileType,0.75);
+        }
+        function toPreviewer(dataUrl){
+            var imgLength = $(".imgBox").length + 1;
+            var html = '';
+            html += '<div class="imgBox">';
+            html += '<img src="'+ dataUrl + '" />';
+            html += '<input type="hidden" name="images[]" value="'+ dataUrl +'" />';
+            html += '<span class="cancel_btn" onclick="imgCancel(this)"></span>'
+            html += '</div>';
+            $(".addImg").before(html);
+            $(".s_desc").eq(imgLength - 1).show();
+            if(imgLength < 3){
+                $("#addImg").show();
+            }else{
+                $("#addImg").hide();
+            }
+        }
+        function compress(img, fileType) {
+            var canvas = document.createElement("canvas");
+            var rotateshow;
+            EXIF.getData(img, function(){
+                EXIF.getAllTags(img);
+                Orientation = EXIF.getTag(img,'Orientation');
+                switch (Orientation){
+                    case 6:
+                        rotateshow = rotateImg(img,'left',canvas,fileType);
+                        break;
+                    case 8:
+                        rotateshow = rotateImg(img,'right',canvas,fileType);
+                        break;
+                    case 3:
+                        rotateImg(img,'right',canvas,fileType);
+                        rotateshow = rotateImg(img,'right',canvas,fileType);
+                        break;
+                    default:
+                        rotateshow = img.src;
+                }
+                toPreviewer(rotateshow);
+            });
+        }
+        $("#all_sub").on("click",function(){
+            var length = $(".imgBox").length;
+            if(length == 0){
+                alert("请先上传图片！");
+                return false;
+            }
+            var data = $("#imgUpForm").serialize();
+            $.ajax({
+                type: 'post',
+                url: 'upload.php',
+                data: data,
+                dataType: 'json',
+                success: function(d){
+                    console.log(d.msg);
+                }
+            })
+        })
+    </script>
+</body>
+</html>
