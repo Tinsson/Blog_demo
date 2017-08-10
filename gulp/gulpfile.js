@@ -2,7 +2,9 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     imagemin = require('gulp-imagemin'),
     cssmin = require('gulp-clean-css'),
-    spriter = require('gulp-css-spriter');
+    spriter = require('gulp-css-spriter'),
+    less = require('gulp-less'),
+    livereload = require('gulp-livereload');
 
 gulp.task('jsmin', function(){
     gulp.src('js/common.js')
@@ -54,10 +56,22 @@ gulp.task('sprite', function(){
         .pipe(gulp.dest('./dist/css'));
 })
 
+gulp.task('less',function(){
+    gulp.src('css/*.less')
+        .pipe(less())
+        .pipe(gulp.dest('dist/css'))
+        .pipe(livereload());
+})
+
+gulp.task('watch', function(){
+    livereload.listen();
+    gulp.watch('css/*.less',['less']);
+})
+
 //定义监控任务
 gulp.task('watchTask', function () {
     gulp.watch('./image/*.png', ['imgmin']);
     gulp.watch('./image/*.jpg', ['imgmin']);
     gulp.watch('./js/*.js', ['es6Toes5']);
-    gulp.watch('./css/*.less', ['lessTask']); //当所有less文件发生改变时，调用testLess任务
+    gulp.watch('./css/*.less', ['less']); //当所有less文件发生改变时，调用testLess任务
 });
